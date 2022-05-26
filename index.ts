@@ -1,17 +1,23 @@
+import express, { Express, Request, Response } from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
-const fetchTtsResult = async () => {
-    const payload = { text: "테스트" };
+const app: Express = express();
+const port = process.env.PORT;
 
+app.use(express.json());
+app.use(cors());
+
+const fetchTtsResult = async (text: string) => {
     const synthesize_url = `https://kakaoi-newtone-openapi.kakao.com/v1/synthesize`;
     const headers_synth = {
         "Content-Type": "application/xml",
         Authorization: `KakaoAK ${process.env.TTS_API_KEY}`,
     };
-    const synth_in = `<speak> <voice name='WOMAN_DIALOG_BRIGHT'> ${payload.text} </voice> </speak>`;
+    const synth_in = `<speak> <voice name='WOMAN_DIALOG_BRIGHT'> ${text} </voice> </speak>`;
     const res = await fetch(synthesize_url, {
         method: "POST",
         headers: headers_synth,
@@ -24,8 +30,21 @@ const fetchTtsResult = async () => {
         throw new Error(message);
     }
 
-    const data = await res.arrayBuffer();
-    console.log(data);
+    return await res.arrayBuffer();
 };
 
-fetchTtsResult();
+app.post("/", async (req: Request, res: Response) => {
+    const { text } = req.body;
+
+    const arrBuff = await fetchTtsResult(text);
+
+    const buffer = Buffer.from(arrBuff);
+
+    const base64String = buffer.toString("base64");
+
+    res.status(200).json({ base64String });
+});
+
+app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running on port ${port}`);
+});
