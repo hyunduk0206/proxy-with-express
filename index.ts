@@ -36,6 +36,8 @@ const fetchTtsResult = async (text: string) => {
 app.post("/", async (req: Request, res: Response) => {
     const { text } = req.body;
 
+    console.log("->", text);
+
     const arrBuff = await fetchTtsResult(text);
 
     const buffer = Buffer.from(arrBuff);
