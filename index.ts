@@ -38,7 +38,7 @@ app.get("/ping", (req: Request, res: Response) => {
 });
 
 app.post("/ping", (req: Request, res: Response) => {
-    res.status(200).json({ 'pong' });
+    res.status(200).json({ payload: "pong" });
 });
 
 app.post("/", async (req: Request, res: Response) => {
