@@ -33,6 +33,10 @@ const fetchTtsResult = async (text: string) => {
     return await res.arrayBuffer();
 };
 
+app.get("/ping", (req: Request, res: Response) => {
+    res.send("pong");
+});
+
 app.post("/", async (req: Request, res: Response) => {
     const { text } = req.body;
 
