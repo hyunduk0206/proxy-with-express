@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -10,6 +10,17 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json"
+    );
+    next();
+});
 
 const fetchTtsResult = async (text: string) => {
     const synthesize_url = `https://kakaoi-newtone-openapi.kakao.com/v1/synthesize`;
