@@ -37,6 +37,10 @@ app.get("/ping", (req: Request, res: Response) => {
     res.send("pong");
 });
 
+app.post("/ping", (req: Request, res: Response) => {
+    res.status(200).json({ 'pong' });
+});
+
 app.post("/", async (req: Request, res: Response) => {
     const { text } = req.body;
 
